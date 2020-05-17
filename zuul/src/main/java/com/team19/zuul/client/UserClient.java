@@ -1,11 +1,8 @@
 package com.team19.zuul.client;
 
-import com.team19.zuul.dto.RegistrationRequestDTO;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(name = "user")
 public interface UserClient {
@@ -28,6 +25,4 @@ public interface UserClient {
     @PostMapping("/helloClient")
     String postClient();
 
-    @PostMapping(value = "/auth/registration")
-    ResponseEntity<?> registration(@RequestBody RegistrationRequestDTO registrationRequestDTO);
 }
