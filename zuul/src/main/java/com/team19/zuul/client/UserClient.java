@@ -29,4 +29,5 @@ public interface UserClient {
 
     @PostMapping("/auth/verifyUser")
     VerficationResponse verifyUser(@RequestBody String token);
+
 }
