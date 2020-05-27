@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "user")
+@FeignClient(name = "user-service")
 public interface UserClient {
 
     @GetMapping("/helloAdmin")
