@@ -1,0 +1,155 @@
+version: '3.7'
+services:
+
+  eureka-serviceregistry:
+    #build: ./xml-eureka-zuul/eureka
+    image: senkasoic/eureka-service:v1
+    ports:
+     - "8761:8761"
+    tty: true
+    container_name: eureka-serviceregistry
+    networks:
+      - xml-network
+    restart: on-failure  
+
+  zuul:
+    #build: ./xml-eureka-zuul/zuul
+    image: senkasoic/zuul-service:v1
+    ports:
+    - "8083:8083"
+    environment:
+      REGISTRY_HOST: eureka-serviceregistry
+    tty: true
+    container_name: zuul
+    networks:
+      - xml-network
+    restart: on-failure  
+    depends_on:
+      - eureka-serviceregistry
+  
+  mysql-backend:
+    image: mysql:8.0.19
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: root
+      MYSQL_DATABASE: xml_backend
+    ports:
+      - "3306"  
+    restart: always  
+    container_name: mysql-backend
+    networks:
+      - xml-network  
+    volumes:
+      - mysql-data:/var/lib/mysql      
+
+  user-service:
+    #build: ./xml-user-microservice
+    image: senkasoic/user-service:v1
+    ports:
+    - "8081:8081"
+    environment:
+        REGISTRY_HOST: eureka-serviceregistry
+        DATABASE_USERNAME: root
+        DATABASE_PASSWORD: root
+        DATABASE_SCHEMA: jpa_xml_user_service
+        DATABASE_DOMAIN: mysql-backend
+        DATABASE_PORT: 3306
+    tty: true
+    container_name: user-service
+    networks:
+      - xml-network
+    restart: on-failure  
+    depends_on:
+      - eureka-serviceregistry
+      - mysql-backend
+
+  ad-service:
+    #build: ./xml-ad-microservice
+    image: senkasoic/ad-service:v1
+    ports:
+    - "8085:8085"
+    environment:
+        REGISTRY_HOST: eureka-serviceregistry
+        DATABASE_USERNAME: root
+        DATABASE_PASSWORD: root
+        DATABASE_SCHEMA: jpa_xml_ad_service
+        DATABASE_DOMAIN: mysql-backend
+        DATABASE_PORT: 3306
+    tty: true
+    container_name: ad-service
+    networks:
+      - xml-network
+    restart: on-failure
+    depends_on:
+      - eureka-serviceregistry  
+      - mysql-backend  
+
+  rent-service:
+    #build: ./xml-rent-microservice
+    image: senkasoic/rent-service:v1
+    ports:
+    - "8084:8084"
+    environment:
+        REGISTRY_HOST: eureka-serviceregistry
+        DATABASE_USERNAME: root
+        DATABASE_PASSWORD: root
+        DATABASE_SCHEMA: jpa_xml_rent_service
+        DATABASE_DOMAIN: mysql-backend
+        DATABASE_PORT: 3306
+    tty: true
+    container_name: rent-service
+    networks:
+      - xml-network
+    restart: on-failure
+    depends_on:
+      - eureka-serviceregistry  
+      - mysql-backend 
+
+  car-service:
+    #build: ./xml-car-microservice
+    image: senkasoic/car-service:v1
+    ports:
+    - "8082:8082"
+    volumes: 
+    - ./carPicturesMain:/carPicturesMain
+    #- ./xml-car-microservice/carPicturesMain:/carPicturesMain 
+    environment:
+        REGISTRY_HOST: eureka-serviceregistry
+        DATABASE_USERNAME: root
+        DATABASE_PASSWORD: root
+        DATABASE_SCHEMA: jpa_xml_car_service
+        DATABASE_DOMAIN: mysql-backend
+        DATABASE_PORT: 3306
+    tty: true
+    container_name: car-service
+    networks:
+      - xml-network
+    restart: on-failure
+    depends_on:
+      - eureka-serviceregistry  
+      - mysql-backend    
+
+  
+volumes:
+  mysql-data:
+  
+networks:
+  xml-network:
+    name: xml-network
+    driver: bridge    
+
+  
+
+ 
+
+  
+
+ 
+  
+
+        
+
+  
+
+  
