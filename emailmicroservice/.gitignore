@@ -1,7 +1,5 @@
 HELP.md
-zuul/target/
-eureka/target/
-emailmicroservice/target/
+target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**
@@ -16,20 +14,10 @@ emailmicroservice/target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-zuul/.idea
-zuul/*.iws
-zuul/*.iml
-zuul/*.ipr
-
-eureka/.idea
-eureka/*.iws
-eureka/*.iml
-eureka/*.ipr
-
-emailmicroservice/.idea
-emailmicroservice/*.iws
-emailmicroservice/*.iml
-emailmicroservice/*.ipr
+.idea
+*.iws
+*.iml
+*.ipr
 
 ### NetBeans ###
 /nbproject/private/
