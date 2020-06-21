@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.team19</groupId>
     <artifactId>client</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>Client</name>
     <description>Frontend app for main backend</description>
 

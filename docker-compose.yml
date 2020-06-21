@@ -3,7 +3,7 @@ services:
 
   eureka-serviceregistry:
     #build: ./xml-eureka-zuul/eureka
-    image: senkasoic/eureka-service:v1
+    image: senkasoic/eureka-service:v2
     ports:
      - "8761:8761"
     tty: true
@@ -14,7 +14,7 @@ services:
 
   zuul:
     #build: ./xml-eureka-zuul/zuul
-    image: senkasoic/zuul-service:v1
+    image: senkasoic/zuul-service:v2
     ports:
     - "8083:8083"
     environment:
@@ -43,9 +43,18 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql      
 
+  rabbitmq-broker:
+    image: rabbitmq:management-alpine
+    container_name: rabbitmq-broker
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - xml-network
+  
   user-service:
     #build: ./xml-user-microservice
-    image: senkasoic/user-service:v1
+    image: senkasoic/user-service:v2
     ports:
     - "8081:8081"
     environment:
@@ -55,6 +64,7 @@ services:
         DATABASE_SCHEMA: jpa_xml_user_service
         DATABASE_DOMAIN: mysql-backend
         DATABASE_PORT: 3306
+        RMQ_HOST: rabbitmq-broker
     tty: true
     container_name: user-service
     networks:
@@ -63,10 +73,59 @@ services:
     depends_on:
       - eureka-serviceregistry
       - mysql-backend
+      - rabbitmq-broker
+    
+  email-service:
+    #build: ./xml-eureka-zuul/emailmicroservice
+    image: senkasoic/email-service:v1
+    ports:
+    - "8087:8087"
+    environment:
+        RMQ_HOST: rabbitmq-broker
+    tty: true
+    container_name: email-service
+    networks:
+      - xml-network
+    restart: on-failure  
+    depends_on:
+      - rabbitmq-broker
+      - user-service
 
+  main-front:
+    #build: ./xml-eureka-zuul/client
+    image: senkasoic/main-front:v1
+    ports:
+    - "8080:8080"
+    tty: true
+    container_name: main-front
+    networks:
+      - xml-network
+    restart: on-failure
+  
+#  agent:
+#    build: ./xml-agent-back
+#    ports:
+#    - "8086:8086"
+#    volumes: 
+#    #- ./carPictures:/carPictures
+#    - ./xml-agent-back/carPictures:/carPictures
+#    environment:
+#        DATABASE_USERNAME: root
+#        DATABASE_PASSWORD: root
+#        DATABASE_SCHEMA: jpa_xml_agent
+#        DATABASE_DOMAIN: mysql-backend
+#        DATABASE_PORT: 3306
+#    tty: true
+#    container_name: agent
+#    networks:
+#      - xml-network
+#    restart: on-failure
+#    depends_on:
+#      - mysql-backend 
+    
   ad-service:
     #build: ./xml-ad-microservice
-    image: senkasoic/ad-service:v1
+    image: senkasoic/ad-service:v2
     ports:
     - "8085:8085"
     environment:
@@ -87,7 +146,7 @@ services:
 
   rent-service:
     #build: ./xml-rent-microservice
-    image: senkasoic/rent-service:v1
+    image: senkasoic/rent-service:v2
     ports:
     - "8084:8084"
     environment:
@@ -108,7 +167,7 @@ services:
 
   car-service:
     #build: ./xml-car-microservice
-    image: senkasoic/car-service:v1
+    image: senkasoic/car-service:v2
     ports:
     - "8082:8082"
     volumes: 
