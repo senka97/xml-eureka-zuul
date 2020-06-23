@@ -26,4 +26,9 @@ public class Consumer {
     public void handlerForApproving(String message) {
         emailService.sendEmailForApprovingRegistrationRequest(message);
     }
+
+    @RabbitListener(queues="${messagequeue}")
+    public void handler(String message) {
+        emailService.sendEmail(message);
+    }
 }
