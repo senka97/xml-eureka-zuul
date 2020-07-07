@@ -2,8 +2,8 @@ version: '3.7'
 services:
 
   eureka-serviceregistry:
-    #build: ./xml-eureka-zuul/eureka
-    image: senkasoic/eureka-service:v2
+    build: ./xml-eureka-zuul/eureka
+    #image: senkasoic/eureka-service:v2
     ports:
      - "8761:8761"
     tty: true
@@ -13,8 +13,8 @@ services:
     restart: on-failure  
 
   zuul:
-    #build: ./xml-eureka-zuul/zuul
-    image: senkasoic/zuul-service:v2
+    build: ./xml-eureka-zuul/zuul
+    #image: senkasoic/zuul-service:v2
     ports:
     - "8083:8083"
     environment:
@@ -53,8 +53,8 @@ services:
       - xml-network
   
   user-service:
-    #build: ./xml-user-microservice
-    image: senkasoic/user-service:v2
+    build: ./xml-user-microservice
+    #image: senkasoic/user-service:v2
     ports:
     - "8081:8081"
     environment:
@@ -76,8 +76,8 @@ services:
       - rabbitmq-broker
     
   email-service:
-    #build: ./xml-eureka-zuul/emailmicroservice
-    image: senkasoic/email-service:v1
+    build: ./xml-eureka-zuul/emailmicroservice
+    #image: senkasoic/email-service:v1
     ports:
     - "8087:8087"
     environment:
@@ -92,8 +92,8 @@ services:
       - user-service
 
   main-front:
-    #build: ./xml-eureka-zuul/client
-    image: senkasoic/main-front:v1
+    build: ./xml-eureka-zuul/client
+    #image: senkasoic/main-front:v1
     ports:
     - "8080:8080"
     tty: true
@@ -102,30 +102,31 @@ services:
       - xml-network
     restart: on-failure
   
-#  agent:
-#    build: ./xml-agent-back
-#    ports:
-#    - "8086:8086"
-#    volumes: 
-#    #- ./carPictures:/carPictures
-#    - ./xml-agent-back/carPictures:/carPictures
-#    environment:
-#        DATABASE_USERNAME: root
-#        DATABASE_PASSWORD: root
-#        DATABASE_SCHEMA: jpa_xml_agent
-#        DATABASE_DOMAIN: mysql-backend
-#        DATABASE_PORT: 3306
-#    tty: true
-#    container_name: agent
-#    networks:
-#      - xml-network
-#    restart: on-failure
-#    depends_on:
-#      - mysql-backend 
+  agent:
+    build: ./xml-agent-back
+    ports:
+    - "8086:8086"
+    volumes: 
+    #- ./carPictures:/carPictures
+    - ./xml-agent-back/carPictures:/carPictures
+    environment:
+        DATABASE_USERNAME: root
+        DATABASE_PASSWORD: root
+        DATABASE_SCHEMA: jpa_xml_agent
+        DATABASE_DOMAIN: mysql-backend
+        DATABASE_PORT: 3306
+        ZUUL: zuul
+    tty: true
+    container_name: agent
+    networks:
+      - xml-network
+    restart: on-failure
+    depends_on:
+     - mysql-backend 
     
   ad-service:
-    #build: ./xml-ad-microservice
-    image: senkasoic/ad-service:v2
+    build: ./xml-ad-microservice
+    #image: senkasoic/ad-service:v2
     ports:
     - "8085:8085"
     environment:
@@ -145,8 +146,8 @@ services:
       - mysql-backend  
 
   rent-service:
-    #build: ./xml-rent-microservice
-    image: senkasoic/rent-service:v2
+    build: ./xml-rent-microservice
+    #image: senkasoic/rent-service:v2
     ports:
     - "8084:8084"
     environment:
@@ -166,13 +167,13 @@ services:
       - mysql-backend 
 
   car-service:
-    #build: ./xml-car-microservice
-    image: senkasoic/car-service:v2
+    build: ./xml-car-microservice
+    #image: senkasoic/car-service:v2
     ports:
     - "8082:8082"
     volumes: 
-    - ./carPicturesMain:/carPicturesMain
-    #- ./xml-car-microservice/carPicturesMain:/carPicturesMain 
+    #- ./carPicturesMain:/carPicturesMain
+    - ./xml-car-microservice/carPicturesMain:/carPicturesMain 
     environment:
         REGISTRY_HOST: eureka-serviceregistry
         DATABASE_USERNAME: root
@@ -180,6 +181,7 @@ services:
         DATABASE_SCHEMA: jpa_xml_car_service
         DATABASE_DOMAIN: mysql-backend
         DATABASE_PORT: 3306
+        RMQ_HOST: rabbitmq-broker
     tty: true
     container_name: car-service
     networks:
@@ -187,8 +189,21 @@ services:
     restart: on-failure
     depends_on:
       - eureka-serviceregistry  
-      - mysql-backend    
-
+      - mysql-backend
+      - rabbitmq-broker
+      
+  androidapp:
+    build: ./xml-eureka-zuul/androidapp
+    ports:
+      - "9000:9000"
+    tty: true
+    container_name: androidapp
+    networks: 
+      - xml-network
+    restart: on-failure
+    depends_on:
+      - rabbitmq-broker
+      - car-service
   
 volumes:
   mysql-data:
