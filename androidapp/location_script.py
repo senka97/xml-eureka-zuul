@@ -100,9 +100,9 @@ coordinates.append(c40)
 
 print(len(coordinates))
 
-# ako se skripta pokrece u kontejneru onda za host ide rabbitmq-broker
+# ako se skripta pokrece u kontejneru onda za host ide rabbitmq-broker (localhost)
 connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host='localhost', port=5672))
+    pika.ConnectionParameters(host='rabbitmq-broker', port=5672))
 channel = connection.channel()
 channel.queue_declare(queue='location-queue', durable=True)
 
