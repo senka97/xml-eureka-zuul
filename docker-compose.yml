@@ -2,8 +2,8 @@ version: '3.7'
 services:
 
   eureka-serviceregistry:
-    build: ./xml-eureka-zuul/eureka
-    #image: senkasoic/eureka-service:v2
+    #build: ./xml-eureka-zuul/eureka
+    image: senkasoic/eureka-service:v3
     ports:
      - "8761:8761"
     tty: true
@@ -13,8 +13,8 @@ services:
     restart: on-failure  
 
   zuul:
-    build: ./xml-eureka-zuul/zuul
-    #image: senkasoic/zuul-service:v2
+    #build: ./xml-eureka-zuul/zuul
+    image: senkasoic/zuul-service:v3
     ports:
     - "8083:8083"
     environment:
@@ -53,8 +53,8 @@ services:
       - xml-network
   
   user-service:
-    build: ./xml-user-microservice
-    #image: senkasoic/user-service:v2
+    #build: ./xml-user-microservice
+    image: senkasoic/user-service:v3
     ports:
     - "8081:8081"
     environment:
@@ -73,27 +73,27 @@ services:
     depends_on:
       - eureka-serviceregistry
       - mysql-backend
-      - rabbitmq-broker
+#      - rabbitmq-broker
     
-  email-service:
-    build: ./xml-eureka-zuul/emailmicroservice
-    #image: senkasoic/email-service:v1
-    ports:
-    - "8087:8087"
-    environment:
-        RMQ_HOST: rabbitmq-broker
-    tty: true
-    container_name: email-service
-    networks:
-      - xml-network
-    restart: on-failure  
-    depends_on:
-      - rabbitmq-broker
-      - user-service
+#  email-service:
+#    build: ./xml-eureka-zuul/emailmicroservice
+#    #image: senkasoic/email-service:v1
+#    ports:
+#    - "8087:8087"
+#    environment:
+#        RMQ_HOST: rabbitmq-broker
+#    tty: true
+#    container_name: email-service
+#    networks:
+#      - xml-network
+#    restart: on-failure  
+#    depends_on:
+#      - rabbitmq-broker
+#      - user-service
 
   main-front:
-    build: ./xml-eureka-zuul/client
-    #image: senkasoic/main-front:v1
+    #build: ./xml-eureka-zuul/client
+    image: senkasoic/main-front:v2
     ports:
     - "8080:8080"
     tty: true
@@ -103,12 +103,13 @@ services:
     restart: on-failure
   
   agent:
-    build: ./xml-agent-back
+    #build: ./xml-agent-back
+    image: senkasoic/agent:v1
     ports:
     - "8086:8086"
     volumes: 
-    #- ./carPictures:/carPictures
-    - ./xml-agent-back/carPictures:/carPictures
+    - ./carPictures:/carPictures
+    #- ./xml-agent-back/carPictures:/carPictures
     environment:
         DATABASE_USERNAME: root
         DATABASE_PASSWORD: root
@@ -125,8 +126,8 @@ services:
      - mysql-backend 
     
   ad-service:
-    build: ./xml-ad-microservice
-    #image: senkasoic/ad-service:v2
+    #build: ./xml-ad-microservice
+    image: senkasoic/ad-service:v3
     ports:
     - "8085:8085"
     environment:
@@ -146,8 +147,8 @@ services:
       - mysql-backend  
 
   rent-service:
-    build: ./xml-rent-microservice
-    #image: senkasoic/rent-service:v2
+    #build: ./xml-rent-microservice
+    image: senkasoic/rent-service:v3
     ports:
     - "8084:8084"
     environment:
@@ -167,13 +168,13 @@ services:
       - mysql-backend 
 
   car-service:
-    build: ./xml-car-microservice
-    #image: senkasoic/car-service:v2
+    #build: ./xml-car-microservice
+    image: senkasoic/car-service:v3
     ports:
     - "8082:8082"
     volumes: 
-    #- ./carPicturesMain:/carPicturesMain
-    - ./xml-car-microservice/carPicturesMain:/carPicturesMain 
+    - ./carPicturesMain:/carPicturesMain
+    #- ./xml-car-microservice/carPicturesMain:/carPicturesMain 
     environment:
         REGISTRY_HOST: eureka-serviceregistry
         DATABASE_USERNAME: root
@@ -193,7 +194,8 @@ services:
       - rabbitmq-broker
       
   androidapp:
-    build: ./xml-eureka-zuul/androidapp
+    image: senkasoic/androidapp:v1
+    #build: ./xml-eureka-zuul/androidapp
     ports:
       - "9000:9000"
     tty: true
