@@ -24,11 +24,8 @@
   https://github.com/senka97/xml-agent-back
   
  # Upustvo za pokretanje:
-  - Da bi se pokrenula glavna aplikacija neophodno je:
+  - Da bi se pokrenule glavna i agentska aplikacija neophodno je:
      - klonirati ovaj repozitorijum 
      - pozicionirati se u njega i komandom **docker-compose up** pokrenuti sve mikroservise 
-     - Frontend aplikaciji pristupiti na: https://localhost:8080 
-  
- - Da bi se pokrenula agentska aplikacija nephodno je:
-    - klonirati repozitorijum https://github.com/senka97/xml-agent-back za backend aplikaciju
-    - klonirati repozitorijum https://github.com/senka97/xml-agent-front za frontend aplikaciju i pokrenuti obe.
+     - Glavnoj aplikaciji pristupiti na: http://localhost:8080 
+     - Agentskoj aplikaciji na http://localhost:8086
