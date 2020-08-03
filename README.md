@@ -1,6 +1,10 @@
-# xml-eureka-zuul
 
- Main application:
+
+# Opis: 
+
+ Rent-a-Car sistem se sastoji od **glavne aplikacije**, koja ima frontend (klijentski, agentski i administratorski) i backend koji je mikroservisne arhitekture i **agentske aplikacije** koja ima frontend (samo jedan agent) i monolitni backend. Agentska aplikacija sa glavnom aplikacijom komunicira preko SOAP poruka. 
+
+ Glavna aplikacija:
   - Frontend: 
   https://github.com/senka97/xml-front
 
@@ -16,7 +20,7 @@
   - Rent microservice
   https://github.com/senka97/xml-rent-microservice
   
- Agent application: 
+ Agentska aplikacija: 
   - Frontend:
   https://github.com/senka97/xml-agent-front
   
