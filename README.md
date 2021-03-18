@@ -8,7 +8,7 @@ Rent-a-Car sistem se sastoji od:
 
  - **glavne aplikacije** 
      koja ima **frontend** (za klijente, agente i administratore) i **backend** koji je mikroservisne arhitekture 
- - **agentske aplikacije** koja ima **frontend** (samo jedan agent) i backed koji predstavlja monolitnu aplikaciju 
+ - **agentske aplikacije** koja ima **frontend** (samo jedan agent) i **backed** koji predstavlja monolitnu aplikaciju 
 
 Agentska aplikacija sa glavnom aplikacijom komunicira preko SOAP poruka. 
 
@@ -16,7 +16,7 @@ Agentska aplikacija sa glavnom aplikacijom komunicira preko SOAP poruka.
   - Frontend: 
   https://github.com/senka97/xml-front
   
-  Mikroservisi:
+   Mikroservisi:
 
   - User microservice:
   https://github.com/senka97/xml-user-microservice
